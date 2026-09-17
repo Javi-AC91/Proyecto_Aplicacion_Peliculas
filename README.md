@@ -1,5 +1,7 @@
 # Proyecto_Aplicacion_Peliculas
 
+Equipo 7
+
 Por: Ricardo Javier Anaya Cortés and José Angel Riverón Badillo.
 
 Este repositorio contiene la información relevante para la entrega del proyecto integrador 'Aplicación de películas'.
@@ -34,4 +36,8 @@ Lista de películas desde TMDB con poster, título e información básica.
 Detalle con poster, título, sinopsis y fecha de estreno.
 Agregar y quitar favoritas.
 Estados de loading, error, sin resultados y favoritos vacíos.
+
+
+
+<img width="675" height="351" alt="Captura de pantalla 2026-09-17 a la(s) 5 46 17 p m" src="https://github.com/user-attachments/assets/072d1a2b-b545-489b-ae56-dfa7c609ee3f" />
 
