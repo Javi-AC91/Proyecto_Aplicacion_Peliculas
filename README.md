@@ -24,5 +24,14 @@ Agregar y quitar favoritas.
 Estados de loading, error, sin resultados y favoritos vacíos.
 
 2. 17/9/2026
-
+Diseña las pantallas para los siguientes flujos para una app de películas. Usa el mismo contenido y estilo en las pantallas, una al lado de la otra. Usa un degradado abstracto para el fondo, nada de fotos, usa la misma tipografía como la que usaste en donde dice categorías populares y usa esa tipografía para exactamente todo el diseño. 
+Antes de la parte de inicio pon la parte de login, y agrega otro flujo para modificar el perfil donde incluya los reviews y calificaciones propias de las películas que hayas visto 
+Inicio → lista de películas → detalle.
+Inicio → búsqueda → resultados → detalle.
+Inicio → favoritos → película guardada → detalle.
+Incluir:
+Lista de películas desde TMDB con poster, título e información básica.
+Detalle con poster, título, sinopsis y fecha de estreno.
+Agregar y quitar favoritas.
+Estados de loading, error, sin resultados y favoritos vacíos.
 
