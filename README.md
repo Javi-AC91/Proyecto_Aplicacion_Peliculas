@@ -38,6 +38,9 @@ Agregar y quitar favoritas.
 Estados de loading, error, sin resultados y favoritos vacíos.
 
 
+ Este es de prueba
+
 
 <img width="675" height="351" alt="Captura de pantalla 2026-09-17 a la(s) 5 46 17 p m" src="https://github.com/user-attachments/assets/072d1a2b-b545-489b-ae56-dfa7c609ee3f" />
 
+Este texto es de prueba
