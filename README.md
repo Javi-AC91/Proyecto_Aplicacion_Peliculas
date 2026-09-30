@@ -77,7 +77,63 @@ Error
 sin-resultados
 <img width="293" height="650" alt="image" src="https://github.com/user-attachments/assets/2c044e01-d875-4db6-8885-7235b1159e4b" />
 
+Elementos de Accesibilidad (21 septiembre 2026)
 
+Los elementos que contienen asistencia de accesibilidad. Por la naturaleza de la aplicación abarcaremos aspectos de accesibilidad para personas discapacidad visual (ciegos).
+
+Flujo de accesibilidad flujo Vista Registro (primera vez que se abre la app una vez descargada de la AppStore): 
+1. Se leen en altavoz el campo 'Nombre' y el botón 'Siguiente'.
+
+Flujo de accesibilidad Vista Inicio:
+1. Se leen las cajas de texto de Bienvenida.
+2. Se leen las categorías. Se menciona que cada categoría es un elemento seleccionable.
+   2.1 El usuario selecciona una categoría.
+   2.2 Se lee la lista de la categoría. 
+4. Se lee la lista de tendencias.
+   3.1 El usuario selecciona una película de la lista.
+   3.2 Se leen año, duración, calificación (se menciona que se pueden leer las reseñas), sinopsis y reparto.
+       3.2.1 El usuario selecciona las reseñas.
+       3.2.2 Se leen las reseñas.
+       3.2.3 El usuario regresa a la vista 3.2.
+
+Flujo de accesibilidad Vista Búsqueda. 
+1. Se lee 'Campo para buscar películas'.
+2. Se lee el historial de búsquedas guardadas.
+3. Se leen categorías sugeridas.
+4. El usuario escribe una película.
+   4.1 Se muestran resultados de búsqueda.
+       4.1.1 Si no hay resultados para la búsqueda se leen cajas de texto relacionados con 'Sin resultados'.
+       4.1.2 Se lee el botón 'Limpiar Búsqueda'.
+       4.1.3 El usuario regresa a la vista 1.
+   4.2 El usuario selecciona una película de la lista de búsqueda realizada.
+   4.3 Comienza el flujo 3.1 Flujo de accesibilidad Vista Inicio.
+
+Flujo de accesibilidad Vista Favoritos.
+1. Se leen las cajas de texto de Favoritos.
+2. Se lee la lista de favoritos. Se menciona por altavoz que son elementos para seleccionar.
+3. El usuario selecciona una película de la lista de favoritos.
+4. Comienza el flujo 3.1 Flujo de accesibilidad Vista Inicio.
+
+Flujo de accesibilidad Vista de Perfil.
+1. Se leen los elementos presentes en la vista de perfil. 
+	1.1 Se leen número de películas vistas, número de favoritos, número de reviews. 
+	1.2 Se lee lista de reviews recientes. Se lee que las reviews son seleccionables.
+2. Se lee el botón ‘Editar Perfil’.
+3. El usuario selecciona el botón ‘Editar Perfil’.
+	3.1 Se leen los elementos que se pueden editar en la vista de editar perfil.
+	3.2 El usuario edita algún campo permitido. 
+	3.3 Se leen botones ‘Cancelar’ y ‘Guardar’.
+	3.3 El usuario selecciona Cancelar. 
+		3.3.1 Se repite el flujo accesibilidad Vista de Perfil. 
+	3.4 El usuario selecciona ‘Guardar’. 
+		3.4.1 Se repite el flujo 3.1 de flujo de accesibilidad Vista de Perfil. 
+
+Flujo accesibilidad Algo salió mal.
+1. Se leen las cajas de texto con información de que algo salió mal. 
+2. Se leen los botones ‘Reintentar’ e ‘Ir al inicio’.
+	2.1 El usuario selecciona ‘Reintentar’. 
+		2.1.1 La carga es exitosa. Se lee el flujo 4.1 de Flujo de accesibilidad Vista Búsqueda. 
+		2.1.2 La carga no es exitosa. Se repite el flujo 1 de Flujo accesibilidad Algo salió mal.
 
 
 
