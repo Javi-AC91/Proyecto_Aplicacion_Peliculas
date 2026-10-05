@@ -116,3 +116,55 @@ Necesita conservar: El estado borrador (@State) del formulario hasta que el usua
 Estados Globales Transversales (Loading / Error)
 
 Estas vistas no son flujos de navegación per se, sino representaciones visuales que reaccionan a un enumerador de estado de red (ej. enum ViewState { case loading, loaded, error }). Deben poder recibir un mensaje de error o una acción de reintento (retryAction).
+
+Para cumplir con el análisis y la justificación que pide tu práctica, aquí tienes una versión mucho más digerible, pensada para que puedas explicarla fácilmente o entenderla como conceptos del día a día, sin perder el enfoque en SwiftUI.
+
+
+
+
+
+ 3. Organización del estado (Dónde vive la información y por qué)
+
+* Memoria Global:
+* Es: El inicio de sesión y tu lista de películas Favoritas.
+* ¿Dónde vive?: En un archivo central que toda la app puede leer (usando `@EnvironmentObject` o `@AppStorage` en SwiftUI).
+ Si la sesión caduca, no importa en qué pantalla estés, la app entera debe enterarse para sacarte al Login. Igual con los favoritos: si le doy "Me gusta" a una peli en la pestaña "Buscar", cuando cambie a la pestaña "Favoritos" ya debe estar ahí.
+
+
+* Memoria de Sección (Caché para no gastar datos):
+* Es: Las listas de películas de "Inicio" o los resultados de "Búsqueda".
+  ¿Dónde vive?: En el controlador de cada pantalla principal (usando `ViewModel` o `@StateObject`).
+ Si cambias de la pestaña de Inicio a tu Perfil, y luego regresas al Inicio, no queremos que la app vuelva a descargar todas las portadas de internet. Se guardan en la "memoria" de esa sección para que carguen al instante.
+
+
+* Memoria Temporal o Local:
+* Es: Lo que vas escribiendo letra por letra en la barra de búsqueda o en tu contraseña.
+* ¿Dónde vive?: Dentro de la misma vista de la pantalla (usando un simple `@State`).
+Al resto de la aplicación no le importa qué estás tecleando hasta que le des al botón de "Buscar" o "Guardar". Es información que solo le importa a esa pantallita en ese momento.
+
+
+
+
+
+4. Estrategia de navegación (Cómo nos movemos por la app)
+
+Aquí explicamos cómo el usuario viaja de una pantalla a otra usando las herramientas que nos da SwiftUI.
+
+* Navegación Condicional:
+* Un simple `if/else` al arrancar la app.
+*  Si tienes sesión abierta, ves la app; si no, ves el Login. Al hacerlo así, evitamos que el usuario pueda hacer el gesto de "deslizar hacia atrás" para saltarse la pantalla de inicio de sesión.
+
+
+* Las Secciones Principales (El menú de abajo):
+* El menú de pestañas o `TabView`.
+ Permite tener las 4 secciones principales (Inicio, Buscar, Favoritos, Perfil) vivas al mismo tiempo. El usuario puede saltar de una a otra sin perder en qué parte de la lista se había quedado.
+
+
+* Ir al detalle (Navegación en Pila / Stack):
+* `NavigationStack`.
+ Estás viendo la lista de "Estrenos", tocas una película y la nueva pantalla se desliza de derecha a izquierda. Si le das "Atrás", regresas exactamente a la lista.
+
+
+* Las Tareas Rápidas (Pantallas Emergentes):**
+ Las ventanas modales o `.sheet`.
+ Lo usaremos para "Editar Perfil". La pantalla sube desde abajo cubriendo la vista. Esto psicológicamente le dice al usuario: "Estás haciendo una tarea rápida, guárdala o cancélala para regresar a donde estabas".
