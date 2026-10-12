@@ -1,0 +1,67 @@
+Navegación, estado compartido y propuesta de arquitectura MVVM
+
+Parte 1. Implementación de navegación y estado
+
+1.1 Qué se implementó
+•	Navegación condicional en RootView: si hay sesión [JR1.1]se muestra MainTabView; si no, LoginView.
+•	TabView con 4 secciones (Inicio, Buscar, Favoritos, Perfil), cada una con su propio NavigationStack.
+•	Navegación a Detalle con NavigationLink(value:) + navigationDestination(for: Movie[JR2.1].self).
+•	Editar Perfil como .sheet [JR3.1]con un nombre borrador (@State) que solo se guarda al pulsar "Guardar".
+•	Caso real de información compartida: FavoritesStore, una única instancia inyectada con @EnvironmentObject, leída y modificada por Detalle, Favoritos y Perfil.
+•	Persistencia: la sesión (nombre) con @AppStorage y los favoritos codificados como JSON en UserDefaults[JR4.1].
+•	ViewState<Value> (idle, loading, loaded, error) y vistas LoadingView, ErrorView y EmptyStateView.
+
+Parte 2. Análisis de la estructura actual y propuesta MVVM
+
+2.1 Responsabilidades que hoy están dentro de las vistas
+
+En la versión actual las vistas hacen más que dibujar. Esto funciona para el MVP, pero dificulta probar y reutilizar el código.
+
+Vista ->	Responsabilidades que hoy tiene ->	Debería salir hacia
+• HomeView ->	Armar la URL de TMDB, llamar a URLSession, decodificar JSON, manejar ViewState, guardar la API key.	-> HomeViewModel + MovieService
+• SearchView	-> Validar y codificar el texto, armar la URL, llamar a la red, decidir si hay "sin resultados". ->	SearchViewModel + MovieService
+• MovieDetailView	-> Consultar si es favorita y alternar el favorito. ->	MovieDetailViewModel (delegando en FavoritesStore)
+• FavoritesView ->	Leer la lista y borrar por offsets.	-> Puede seguir leyendo FavoritesStore directamente
+• ProfileView / EditProfileView ->	Validar el nombre y llamar a session.login para guardar. -> EditProfileViewModel (validación y guardado)
+• LoginView ->	Validar que el nombre no esté vacío. -> LoginViewModel (opcional en el MVP)
+
+2.2 Qué se queda en la vista
+•	Layout, estilos, animaciones y navegación (NavigationLink, sheet).
+•	Estado puramente visual y temporal, como el texto que se escribe en un TextField o si una sheet está abierta.
+•	Leer datos ya preparados y reaccionar a ellos; no decidir reglas de negocio.
+
+2.3 Propuesta de capas
+
+Capa -> 	Responsabilidad ->	Piezas de CineApp
+•	Model ->	Datos puros y su forma.	-> Movie, MovieResponse
+•	View -> Dibujar y recibir gestos. ->	HomeView, SearchView, MovieDetailView, etc.
+•	ViewModel ->	Estado de la pantalla, lógica de presentación y validaciones; expone ViewState. ->	HomeViewModel[JR6.1], SearchViewModel, MovieDetailViewModel, EditProfileViewModel
+•	Service ->	Hablar con el exterior (red).	-> MovieService (TMDB)
+•	Store (estado global) ->	Información compartida y persistente entre pantallas.	-> SessionStore, FavoritesStore
+
+2.4 Estructura de carpetas propuesta
+
+CineApp/
+├── App/            CineAppApp.swift
+├── Models/         Movie.swift, ViewState.swift
+├── Services/       MovieService.swift
+├── Stores/         SessionStore.swift, FavoritesStore.swift
+├── ViewModels/     HomeViewModel, SearchViewModel, MovieDetailViewModel, EditProfileViewModel
+└── Views/
+    ├── Root/       RootView, MainTabView
+    ├── Auth/       LoginView
+    ├── Home/       HomeView
+    ├── Search/     SearchView
+    ├── Movie/      MovieDetailView, MovieRow
+    ├── Favorites/  FavoritesView
+    ├── Profile/    ProfileView, EditProfileView
+    └── Components/ LoadingView, ErrorView, EmptyStateView, AppBackground
+ 
+2.5 Decisiones y puntos a revisar
+
+•	SessionStore y FavoritesStore se mantienen como estado global porque son información que varias pantallas necesitan a la vez; no se convierten en ViewModels de una pantalla.
+•	El estado de red (ViewState) será propiedad de cada ViewModel, no global.
+•	La API key de TMDB hoy está escrita en las vistas; debe moverse a MovieService o a un archivo de configuración fuera del repositorio.
+•	Los favoritos guardan la película completa en JSON. Si crece, migrar a SwiftData.
+•	Pendiente de la propuesta: reseñas y calificaciones propias (flujo de Editar Perfil). Necesitarán su propio Store persistente (por ejemplo ReviewsStore).
+
