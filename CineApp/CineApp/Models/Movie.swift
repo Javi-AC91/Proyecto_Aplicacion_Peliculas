@@ -6,11 +6,13 @@ struct Movie: Identifiable, Codable, Hashable {
     let overview: String
     let posterPath: String?
     let releaseDate: String?
+    let voteAverage: Double? // NUEVA PROPIEDAD: Calificación
 
     enum CodingKeys: String, CodingKey {
         case id, title, overview
         case posterPath = "poster_path"
         case releaseDate = "release_date"
+        case voteAverage = "vote_average" // Mapeo para la API futura
     }
 
     var posterURL: URL? {
@@ -23,8 +25,6 @@ struct MovieResponse: Codable {
     let results: [Movie]
 }
 
-/// Estado de una carga de red. Es un ESTADO que modifica lo que
-/// muestra una vista; las vistas de Loading/Error son solo su reflejo visual.
 enum ViewState<Value> {
     case idle
     case loading

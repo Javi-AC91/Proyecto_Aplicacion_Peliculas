@@ -7,6 +7,7 @@ import Combine
 /// Detalle, Favoritos y Perfil. Se persiste en disco (JSON en UserDefaults)
 /// para que NO se pierda al cerrar la app.
 final class FavoritesStore: ObservableObject {
+    private let debug = true
     @Published private(set) var movies: [Movie] = []
 
     private let key = "favoriteMovies"
@@ -38,6 +39,7 @@ final class FavoritesStore: ObservableObject {
     }
 
     private func load() {
+        
         guard let data = UserDefaults.standard.data(forKey: key),
               let saved = try? JSONDecoder().decode([Movie].self, from: data) else { return }
         movies = saved

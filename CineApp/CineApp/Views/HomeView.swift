@@ -2,11 +2,7 @@ import SwiftUI
 
 struct HomeView: View {
     @EnvironmentObject var session: SessionStore
-
-    // Caché de sección: vive mientras exista la vista (el TabView la mantiene viva)
-    @State private var state: ViewState<[Movie]> = .idle
-
-    private let apiKey = "TU_API_KEY_TMDB"
+    @StateObject private var viewModel = HomeViewModel()
 
     var body: some View {
         ZStack {
@@ -15,38 +11,22 @@ struct HomeView: View {
         }
         .navigationTitle("Hola, \(session.userName)")
         .navigationDestination(for: Movie.self) { MovieDetailView(movie: $0) }
-        .task { if case .idle = state { await load() } }
+        .task { await viewModel.loadIfNeeded() }
     }
 
     @ViewBuilder
     private var content: some View {
-        switch state {
+        switch viewModel.state {
         case .idle, .loading:
             LoadingView()
         case .error(let message):
-            ErrorView(message: message) { Task { await load() } }
+            ErrorView(message: message) { Task { await viewModel.load() } }
         case .loaded(let movies):
             List(movies) { movie in
                 NavigationLink(value: movie) { MovieRow(movie: movie) }
                     .listRowBackground(Color.clear)
             }
             .scrollContentBackground(.hidden)
-        }
-    }
-
-    // Hoy la vista hace la llamada de red directamente (se analiza en la Parte 2).
-    private func load() async {
-        state = .loading
-        guard let url = URL(string: "https://api.themoviedb.org/3/movie/popular?api_key=\(apiKey)&language=es-MX") else {
-            state = .error("URL inválida")
-            return
-        }
-        do {
-            let (data, _) = try await URLSession.shared.data(from: url)
-            let decoded = try JSONDecoder().decode(MovieResponse.self, from: data)
-            state = .loaded(decoded.results)
-        } catch {
-            state = .error("No se pudo conectar. Revisa tu internet.")
         }
     }
 }
@@ -67,6 +47,19 @@ struct MovieRow: View {
             VStack(alignment: .leading, spacing: 4) {
                 Text(movie.title).font(.headline)
                 Text(movie.releaseDate ?? "").font(.caption)
+                
+                // Representación de la calificación en UI
+                if let rating = movie.voteAverage {
+                    HStack(spacing: 4) {
+                        Image(systemName: "star.fill")
+                            .foregroundColor(.yellow)
+                            .font(.caption2)
+                        Text(String(format: "%.1f", rating))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    .padding(.top, 2)
+                }
             }
         }
     }
