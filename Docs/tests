@@ -1,0 +1,27 @@
+## Pruebas (Testing)
+
+Se agregaron pruebas unitarias y de interfaz con **XCTest**, sin modificar el código de producción de la app.
+
+### Estructura
+
+```
+cineAppTest/                (pruebas unitarias)
+├── MovieFixture.swift
+├── StubMovieService.swift
+├── MovieTests.swift
+├── FavoritesStoreTests.swift
+├── SessionStoreTests.swift
+└── HomeViewModelTests.swift
+
+cineAppUITest/              (pruebas de interfaz)
+├── cineAppUITest.swift
+└── cineAppUITestLaunchTests.swift
+```
+
+Se eliminaron las pruebas anteriores (`cineApptest.swift` y `MovieViewModelTests.swift`), porque probaban clases que ya no existen en el proyecto (`MovieViewModel`, `MovieServiceProtocol`) y duplicaban el mock del servicio.
+
+### Pruebas unitarias (`cineAppTest`)
+
+| Archivo | Qué prueba |
+|---|---|
+| `MovieFixture.swift` | Datos de ejemplo reutilizables para
