@@ -1,17 +1,19 @@
 import SwiftUI
+import SwiftData
 
 @main
 struct CineAppApp: App {
-    // Fuentes de verdad globales: se crean UNA sola vez aquí
-    // y se inyectan al árbol de vistas con .environmentObject.
     @StateObject private var session = SessionStore()
-    @StateObject private var favorites = FavoritesStore()
+    
+    // Ya no inicializamos FavoritesStore ni ReviewsStore aquí,
+    // porque SwiftData se encargará de esa persistencia.
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(session)
-                .environmentObject(favorites)
+                // Configuramos SwiftData indicándole qué modelos (tablas) va a guardar
+                .modelContainer(for: [Movie.self, Review.self])
         }
     }
 }
