@@ -1,54 +1,53 @@
 import SwiftUI
+import SwiftData
 
 struct ProfileView: View {
     @EnvironmentObject var session: SessionStore
-    @EnvironmentObject var favorites: FavoritesStore
-    @State private var showEdit = false   // controla la sheet
+    @State private var showEdit = false
+    
+    // Consulta a la base de datos para contar los favoritos
+    @Query private var favorites: [Movie]
 
     var body: some View {
-            ZStack {
-                AppBackground()
-                VStack(spacing: 16) {
-                    Image(systemName: "person.circle.fill").font(.system(size: 80))
-                    Text(session.userName).font(.title.bold())
-                    Text("Favoritas: \(favorites.movies.count)")   // mismo store que Favoritos
-                    
-                    Button("Editar perfil") { showEdit = true }
-                        .buttonStyle(.borderedProminent)
-                    
-                    Button("Cerrar sesión", role: .destructive) { session.logout() }
-                        .buttonStyle(.borderedProminent) // <-- Agrega esta línea
-                }
+        ZStack {
+            AppBackground()
+            VStack(spacing: 16) {
+                Image(systemName: "person.circle.fill").font(.system(size: 80))
+                Text(session.userName).font(.title.bold())
+                Text("Favoritas: \(favorites.count)")
+                
+                Button("Editar perfil") { showEdit = true }
+                    .buttonStyle(.borderedProminent)
+                
+                Button("Cerrar sesión", role: .destructive) { session.logout() }
+                    .buttonStyle(.borderedProminent)
             }
-            .navigationTitle("Perfil")
-            .sheet(isPresented: $showEdit) { EditProfileView() }
         }
+        .navigationTitle("Perfil")
+        .sheet(isPresented: $showEdit) { EditProfileView() }
+    }
 }
 
 struct EditProfileView: View {
     @EnvironmentObject var session: SessionStore
     @Environment(\.dismiss) private var dismiss
-    @State private var draftName = ""   // borrador: no toca el global hasta "Guardar"
+    @StateObject private var viewModel = EditProfileViewModel()
 
     var body: some View {
         NavigationStack {
-            Form {
-                TextField("Nombre", text: $draftName)
-            }
+            Form { TextField("Nombre", text: $viewModel.draftName) }
             .navigationTitle("Editar perfil")
             .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancelar") { dismiss() }
-                }
+                ToolbarItem(placement: .cancellationAction) { Button("Cancelar") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Guardar") {
-                        session.login(name: draftName)
+                        viewModel.save(to: session)
                         dismiss()
                     }
-                    .disabled(draftName.trimmingCharacters(in: .whitespaces).isEmpty)
+                    .disabled(viewModel.isSaveDisabled)
                 }
             }
-            .onAppear { draftName = session.userName }
+            .onAppear { viewModel.onAppear(currentName: session.userName) }
         }
     }
 }
