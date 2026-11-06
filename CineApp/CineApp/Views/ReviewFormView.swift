@@ -1,9 +1,8 @@
 import SwiftUI
-import SwiftData
 
 struct ReviewFormView: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var context // <-- Acceso a la base de datos
+    @EnvironmentObject var storage: StorageService // <-- Inyectamos el servicio
     
     @StateObject private var viewModel: ReviewFormViewModel
     let existingReview: Review?
@@ -35,7 +34,8 @@ struct ReviewFormView: View {
                 ToolbarItem(placement: .cancellationAction) { Button("Cancelar") { dismiss() } }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Guardar") {
-                        viewModel.save(in: context, existingReview: existingReview) // <-- Guardamos
+                        // El ViewModel y el Servicio hacen el trabajo
+                        viewModel.save(in: storage, existingReview: existingReview)
                         dismiss()
                     }
                     .disabled(viewModel.isSaveDisabled)

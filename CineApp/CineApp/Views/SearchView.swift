@@ -1,8 +1,15 @@
 import SwiftUI
 
+@MainActor
 struct SearchView: View {
-    // La vista ahora delega la lógica al ViewModel
-    @StateObject private var viewModel = SearchViewModel()
+    // 1. Declaramos sin inicializar
+    @StateObject private var viewModel: SearchViewModel
+    
+    // 2. Inicializamos en el init
+    @MainActor
+    init() {
+        _viewModel = StateObject(wrappedValue: SearchViewModel())
+    }
     
     var body: some View {
         ZStack {

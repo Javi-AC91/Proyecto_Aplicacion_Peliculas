@@ -1,19 +1,19 @@
 import SwiftUI
-import SwiftData
 
 @main
 struct CineAppApp: App {
     @StateObject private var session = SessionStore()
     
-    // Ya no inicializamos FavoritesStore ni ReviewsStore aquí,
-    // porque SwiftData se encargará de esa persistencia.
+    // Instanciamos el servicio central de base de datos
+    @StateObject private var storageService = StorageService()
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environmentObject(session)
-                // Configuramos SwiftData indicándole qué modelos (tablas) va a guardar
-                .modelContainer(for: [Movie.self, Review.self])
+                // Lo inyectamos al entorno para que las vistas puedan
+                // pasárselo a sus respectivos ViewModels
+                .environmentObject(storageService)
         }
     }
 }

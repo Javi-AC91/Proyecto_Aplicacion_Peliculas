@@ -6,8 +6,8 @@ final class HomeViewModel: ObservableObject {
     @Published private(set) var state: ViewState<[Movie]> = .idle
     private let service: MovieServicing
     
-    // Inyectamos el Mock por defecto
-    init(service: MovieServicing = MockMovieService()) {
+    // CAMBIO: Inyectamos el servicio REAL por defecto
+    init(service: MovieServicing = TMDBMovieService()) {
         self.service = service
     }
     
@@ -20,9 +20,13 @@ final class HomeViewModel: ObservableObject {
         state = .loading
         do {
             let movies = try await service.popularMovies()
+            // Validamos estado 'Empty' (aunque populares raro vez está vacío, es buena práctica)
             state = .loaded(movies)
+        } catch let error as LocalizedError {
+            // Propagamos el mensaje de error de nuestro APIError
+            state = .error(error.errorDescription ?? "Ocurrió un error desconocido.")
         } catch {
-            state = .error("No se pudo cargar la cartelera.")
+            state = .error("Error inesperado: \(error.localizedDescription)")
         }
     }
 }

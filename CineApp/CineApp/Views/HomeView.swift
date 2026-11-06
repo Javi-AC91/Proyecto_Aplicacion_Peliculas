@@ -1,8 +1,17 @@
 import SwiftUI
 
+@MainActor
 struct HomeView: View {
     @EnvironmentObject var session: SessionStore
-    @StateObject private var viewModel = HomeViewModel()
+    
+    // 1. Declaramos el StateObject sin inicializarlo directamente
+    @StateObject private var viewModel: HomeViewModel
+
+    // 2. Lo inicializamos dentro del init de la vista
+    @MainActor
+    init() {
+        _viewModel = StateObject(wrappedValue: HomeViewModel())
+    }
 
     var body: some View {
         ZStack {
