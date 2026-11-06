@@ -1,0 +1,25 @@
+Migración de Persistencia a SwiftData
+
+Problema: La persistencia de Favoritos y Reseñas dependía de codificar arreglos completos a JSON y guardarlos en UserDefaults (FavoritesStore y ReviewsStore). Este enfoque es ineficiente para listas largas, ya que carga toda la data en la memoria RAM al iniciar la app y no permite consultas (queries) optimizadas.
+
+Solución: Adopción de SwiftData, el framework moderno de persistencia de Apple basado en SQLite, eliminando por completo los Stores basados en UserDefaults para manejar listas de datos.
+
+Cambios estructurales implementados:
+
+Evolución de los Modelos (@Model):
+
+Los modelos Movie y Review se transformaron de struct (tipos por valor) a class (tipos por referencia).
+
+Se integró la macro @Model para que SwiftData genere las tablas automáticamente, y la macro @Attribute(.unique) en los identificadores para evitar duplicados en la base de datos.
+
+Se reimplementó explícitamente el protocolo Codable en Movie mediante un init(from decoder:) y la función encode(to:) para mantener la compatibilidad con la red.
+
+Configuración del Contenedor:
+
+En CineAppApp, se inyectó el modificador .modelContainer(for: [Movie.self, Review.self]), inicializando la base de datos local para toda la aplicación.
+
+Refactorización de Vistas (Lectura y Escritura):
+
+Lectura: Se reemplazaron los @EnvironmentObject por la macro @Query. Esto permite que vistas como FavoritesView y ProfileView consulten la base de datos de forma directa, diferida (lazy loading) y reactiva.
+
+Escritura: Se inyectó el ModelContext (@Environment(\.modelContext)) en las vistas y ViewModels que necesitan modificar datos (MovieDetailViewModel, ReviewFormViewModel, FavoritesView). Las operaciones manuales de JSON se sustituyeron por comandos transaccionales nativos como context.insert() y context.delete().
