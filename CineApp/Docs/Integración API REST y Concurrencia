@@ -1,0 +1,43 @@
+Integración de API REST (TMDB) y Manejo de Concurrencia
+
+Problema: La aplicación necesitaba conectarse al servicio real de The Movie Database (TMDB) para obtener los datos en vivo, manejando adecuadamente los distintos estados de la interfaz (cargando, éxito, vacío, error) y resolviendo conflictos de concurrencia estricta de Swift al combinar peticiones asíncronas con la base de datos de SwiftData.
+
+Solución: Implementación de un servicio de red dedicado (TMDBMovieService), tipado robusto de errores y aislamiento de actores (@MainActor) para garantizar la seguridad entre hilos.
+
+Cambios estructurales implementados:
+
+Implementación de URLSession y async/await:
+
+Se creó la clase TMDBMovieService adoptando el protocolo MovieServicing.
+
+Se implementó la lógica de red nativa utilizando URLSession.shared.data(from:) de manera asíncrona.
+
+Las respuestas JSON del servidor se procesan y decodifican automáticamente utilizando JSONDecoder en conjunto con el protocolo Decodable del modelo Movie.
+
+Manejo de Errores Tipado (APIError):
+
+Se introdujo un enumerador personalizado APIError (conformando a LocalizedError) para clasificar de manera granular las fallas: URLs inválidas, respuestas HTTP fuera del rango de éxito (200-299), errores de decodificación de datos y fallas de conectividad (ej. sin internet).
+
+Los ViewModels atrapan estos errores controlados y los transforman en mensajes amigables para el usuario.
+
+Gestión de Estados de Interfaz:
+
+Se inyectó el servicio real TMDBMovieService como dependencia por defecto en HomeViewModel y SearchViewModel.
+
+La interfaz ahora reacciona a los 4 estados principales a través de la máquina de estados ViewState:
+
+Loading: Muestra un indicador (LoadingView) mientras async/await suspende la ejecución esperando al servidor.
+
+Content: Muestra la lista de películas (List) al recibir la data.
+
+Empty: Informa cuando la petición fue exitosa pero la matriz de resultados está vacía (EmptyStateView).
+
+Error: Comunica el problema específico (ErrorView) y expone un botón que permite al usuario reintentar la solicitud.
+
+Resolución de Concurrencia Estricta (Strict Concurrency):
+
+Al migrar a SwiftData, la clase Movie (@Model) perdió su capacidad de ser Sendable (viajar libremente entre diferentes hilos de procesamiento de la CPU).
+
+Para evitar colisiones y advertencias del compilador al retornar arreglos [Movie] desde peticiones de red en segundo plano, se aplicó la macro @MainActor al protocolo MovieServicing, a las clases de servicio y a las Vistas.
+
+Esto centraliza la descarga, decodificación y actualización de la UI en el hilo principal (Main Thread), logrando un entorno 100% seguro contra condiciones de carrera.
