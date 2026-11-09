@@ -5,12 +5,14 @@ import Combine
 final class HomeViewModel: ObservableObject {
     @Published private(set) var state: ViewState<[Movie]> = .idle
     private let service: MovieServicing
-    
-    // CAMBIO: Inyectamos el servicio REAL por defecto
-    init(service: MovieServicing = TMDBMovieService()) {
-        self.service = service
+    // El servicio real se crea dentro del init (ya dentro del MainActor)
+    init(service: MovieServicing? = nil) {
+        if let service {
+            self.service = service
+        } else {
+            self.service = TMDBMovieService()
+        }
     }
-    
     func loadIfNeeded() async {
         guard case .idle = state else { return }
         await load()

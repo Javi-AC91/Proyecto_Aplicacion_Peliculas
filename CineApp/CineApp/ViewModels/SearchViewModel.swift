@@ -8,9 +8,12 @@ final class SearchViewModel: ObservableObject {
     
     private let service: MovieServicing
     
-    // CAMBIO: Usamos el servicio REAL
-    init(service: MovieServicing = TMDBMovieService()) {
-        self.service = service
+    init(service: MovieServicing? = nil) {
+        if let service {
+            self.service = service
+        } else {
+            self.service = TMDBMovieService()
+        }
     }
     
     func search() async {

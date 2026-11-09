@@ -25,6 +25,12 @@ final class TMDBMovieService: MovieServicing {
     // REEMPLAZA ESTO CON TU API KEY REAL
     private let apiKey = "c67a97f3f9ae5fb2dd0d03ab7f875979"
     private let baseURL = "https://api.themoviedb.org/3"
+    private let session: URLSession
+
+    // Se puede inyectar otra sesión (por ejemplo, una con respuestas simuladas en las pruebas)
+    init(session: URLSession = .shared) {
+        self.session = session
+    }
     
     func popularMovies() async throws -> [Movie] {
         guard let url = URL(string: "\(baseURL)/movie/popular?api_key=\(apiKey)&language=es-MX") else {
