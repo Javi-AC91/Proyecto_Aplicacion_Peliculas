@@ -1,0 +1,7 @@
+# Archivos de configuración de usuario de Xcode (no se deben compartir)
+xcuserdata/
+DerivedData/
+*.xcuserstate
+
+# Archivos de Secretos y API Keys
+Secrets.swift
