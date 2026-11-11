@@ -1,3 +1,7 @@
+# Diseño de navegación y estado
+
+> **Nota:** este es el diseño inicial, previo a la implementación. En la versión final el login solo solicita un nombre (sin correo ni contraseña); consulta el [README](../README.md) para el alcance actual.
+
 Este documento justifica y documenta las decisiones de navegación y organización del estado de la aplicación, previo a la implementación en SwiftUI.
 
 La aplicación utiliza una arquitectura de navegación basada en un flujo de Autenticación inicial y un TabView principal una vez que el usuario ha iniciado sesión. Las vistas de Loading y Error son estados globales que pueden superponerse en cualquier flujo que dependa de llamadas a red.

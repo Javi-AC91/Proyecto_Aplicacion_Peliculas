@@ -1,8 +1,13 @@
 import SwiftUI
 
 struct SearchView: View {
-    // La vista ahora delega la lógica al ViewModel
-    @StateObject private var viewModel = SearchViewModel()
+    @ObservedObject var storage: StorageService
+    @StateObject private var viewModel: SearchViewModel
+    
+    init(storage: StorageService) {
+        self.storage = storage
+        _viewModel = StateObject(wrappedValue: SearchViewModel())
+    }
     
     var body: some View {
         ZStack {
@@ -12,7 +17,9 @@ struct SearchView: View {
         .navigationTitle("Buscar")
         .searchable(text: $viewModel.query, prompt: "Busca una película")
         .onSubmit(of: .search) { Task { await viewModel.search() } }
-        .navigationDestination(for: Movie.self) { MovieDetailView(movie: $0) }
+        .navigationDestination(for: Movie.self) { movie in
+            MovieDetailView(movie: movie, storage: storage)
+        }
     }
     
     @ViewBuilder
