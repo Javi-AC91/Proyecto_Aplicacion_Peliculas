@@ -124,27 +124,13 @@ Los documentos de diseño y decisiones están en la carpeta [`Docs/`](Docs/):
 
 ## Capturas de la versión final
 
-<table>
-  <tr>
-    <td align="center"><img src="Docs/Capturas/01-login.png" width="170"><br><sub>Login</sub></td>
-    <td align="center"><img src="Docs/Capturas/02-inicio.png" width="170"><br><sub>Inicio</sub></td>
-    <td align="center"><img src="Docs/Capturas/03-busqueda.png" width="170"><br><sub>Búsqueda</sub></td>
-    <td align="center"><img src="Docs/Capturas/04-resultados.png" width="170"><br><sub>Resultados</sub></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="Docs/Capturas/05-detalle.png" width="170"><br><sub>Detalle</sub></td>
-    <td align="center"><img src="Docs/Capturas/06-resena.png" width="170"><br><sub>Reseña</sub></td>
-    <td align="center"><img src="Docs/Capturas/07-favoritos.png" width="170"><br><sub>Favoritos</sub></td>
-    <td align="center"><img src="Docs/Capturas/08-favoritos-vacio.png" width="170"><br><sub>Favoritos vacíos</sub></td>
-  </tr>
-  <tr>
-    <td align="center"><img src="Docs/Capturas/09-perfil.png" width="170"><br><sub>Perfil</sub></td>
-    <td align="center"><img src="Docs/Capturas/10-editar-perfil.png" width="170"><br><sub>Editar perfil</sub></td>
-    <td align="center"><img src="Docs/Capturas/11-error.png" width="170"><br><sub>Error</sub></td>
-    <td align="center"><img src="Docs/Capturas/12-sin-resultados.png" width="170"><br><sub>Sin resultados</sub></td>
-  </tr>
-</table>
+| Login | Inicio | Búsqueda | Detalle de película |
+|:---:|:---:|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/d384b242-511d-46df-873e-1add76877f4a" alt="Login" width="200"> | <img src="https://github.com/user-attachments/assets/42ff7e61-a661-4897-b9cd-aab01f553a54" alt="Inicio" width="200"> | <img src="https://github.com/user-attachments/assets/3f0208c4-f5c3-4e6e-aee1-85fc08443e8c" alt="Búsqueda" width="200"> | <img src="https://github.com/user-attachments/assets/6302c897-ac1f-49c3-afa5-298eb5f55f01" alt="Detalle de película" width="200"> |
 
+| Favoritos | Perfil | Editar perfil |
+|:---:|:---:|:---:|
+| <img src="https://github.com/user-attachments/assets/e0299da8-1cfa-4d99-882e-60e8a99a2ae9" alt="Favoritos" width="200"> | <img src="https://github.com/user-attachments/assets/d52e97eb-230f-4d4f-a371-7a6109395d80" alt="Perfil" width="200"> | <img src="https://github.com/user-attachments/assets/366b8baa-e057-4c26-8bab-f2b0459c7cef" alt="Editar perfil" width="200"> |
 ## Wireframes de diseño (Figma)
 
 > **Importante:** estos wireframes corresponden a la etapa de diseño y **no son la versión final de la app**. La interfaz definitiva puede diferir; consulta las [capturas de la versión final](#capturas-de-la-versión-final).
