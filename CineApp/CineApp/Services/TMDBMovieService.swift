@@ -10,11 +10,11 @@ enum APIError: Error, LocalizedError {
     
     var errorDescription: String? {
         switch self {
-        case .invalidURL: return "La URL de la consulta es inválida."
-        case .invalidResponse: return "El servidor devolvió una respuesta inesperada."
-        case .httpError(let code): return "Error del servidor (Código: \(code))."
-        case .networkError(let error): return "Error de red: \(error.localizedDescription)"
-        case .decodingError: return "Ocurrió un error al leer los datos de la película."
+        case .invalidURL: return "“No pudimos procesar tu solicitud. Revisa lo que escribiste e inténtalo de nuevo.”"
+        case .invalidResponse: return "Inténtalo de nuevo en unos momentos."
+        case .httpError(let code): return "No pudimos acceder al servicio de películas en este momento. Inténtalo más tarde o actualiza la app."
+        case .networkError(let error): return "No pudimos conectarnos. Revisa tu conexión a internet e inténtalo de nuevo."
+        case .decodingError: return "Recibimos información que no pudimos leer. Inténtalo de nuevo más tarde.”"
         }
     }
 }
