@@ -1,5 +1,4 @@
 import Foundation
-import SwiftData
 import Combine
 
 final class ReviewFormViewModel: ObservableObject {
@@ -17,15 +16,7 @@ final class ReviewFormViewModel: ObservableObject {
     
     var isSaveDisabled: Bool { comment.trimmingCharacters(in: .whitespaces).isEmpty }
     
-    func save(in context: ModelContext, existingReview: Review?) {
-        if let existing = existingReview {
-            // Si ya existe, solo actualizamos sus propiedades
-            existing.rating = rating
-            existing.comment = comment
-        } else {
-            // Si no existe, creamos una nueva y la insertamos
-            let newReview = Review(movieId: movieId, rating: rating, comment: comment)
-            context.insert(newReview)
-        }
+    func save(in storage: StorageService, existingReview: Review?) {
+        storage.saveReview(movieId: movieId, rating: rating, comment: comment, existingReview: existingReview)
     }
 }

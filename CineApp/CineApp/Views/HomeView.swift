@@ -1,8 +1,16 @@
 import SwiftUI
 
 struct HomeView: View {
-    @EnvironmentObject var session: SessionStore
-    @StateObject private var viewModel = HomeViewModel()
+    @ObservedObject var session: SessionStore
+    @ObservedObject var storage: StorageService
+    
+    @StateObject private var viewModel: HomeViewModel
+
+    init(session: SessionStore, storage: StorageService) {
+        self.session = session
+        self.storage = storage
+        _viewModel = StateObject(wrappedValue: HomeViewModel())
+    }
 
     var body: some View {
         ZStack {
@@ -10,7 +18,9 @@ struct HomeView: View {
             content
         }
         .navigationTitle("Hola, \(session.userName)")
-        .navigationDestination(for: Movie.self) { MovieDetailView(movie: $0) }
+        .navigationDestination(for: Movie.self) { movie in
+            MovieDetailView(movie: movie, storage: storage)
+        }
         .task { await viewModel.loadIfNeeded() }
     }
 

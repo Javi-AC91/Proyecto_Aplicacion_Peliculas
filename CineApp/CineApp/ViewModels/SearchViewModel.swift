@@ -8,9 +8,12 @@ final class SearchViewModel: ObservableObject {
     
     private let service: MovieServicing
     
-    // Inyectamos el Mock por defecto para que funcione sin internet
-    init(service: MovieServicing = MockMovieService()) {
-        self.service = service
+    init(service: MovieServicing? = nil) {
+        if let service {
+            self.service = service
+        } else {
+            self.service = TMDBMovieService()
+        }
     }
     
     func search() async {
@@ -19,11 +22,12 @@ final class SearchViewModel: ObservableObject {
         
         state = .loading
         do {
-            // Llamamos al servicio (actualmente el Mock)
             let movies = try await service.searchMovies(query: text)
             state = .loaded(movies)
+        } catch let error as LocalizedError {
+            state = .error(error.errorDescription ?? "Error de conexión.")
         } catch {
-            state = .error("No se pudo conectar. Revisa tu internet.")
+            state = .error("Error inesperado: \(error.localizedDescription)")
         }
     }
 }

@@ -1,7 +1,8 @@
 import SwiftUI
 
 struct LoginView: View {
-    @EnvironmentObject var session: SessionStore
+    // Cambiamos @EnvironmentObject por @ObservedObject para exigir inyección
+    @ObservedObject var session: SessionStore
     @State private var name = ""   // estado local: solo le importa a esta pantalla
 
     var body: some View {
@@ -22,8 +23,22 @@ struct LoginView: View {
 
 struct AppBackground: View {
     var body: some View {
-        LinearGradient(colors: [.indigo, .purple, .pink.opacity(0.7)],
-                       startPoint: .topLeading, endPoint: .bottomTrailing)
+        ZStack {
+            // 1. Fondo base completamente blanco
+            Color.white
+                .ignoresSafeArea()
+            
+            // 2. Gradiente con los colores originales pero suavizados individualmente
+            LinearGradient(
+                colors: [
+                    Color.indigo.opacity(0.25),
+                    Color.purple.opacity(0.10),
+                    Color.blue.opacity(0.25)
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
             .ignoresSafeArea()
+        }
     }
 }

@@ -1,11 +1,13 @@
 import Foundation
 
 // El protocolo ahora exige dos métodos: populares y búsqueda
+@MainActor
 protocol MovieServicing {
     func popularMovies() async throws -> [Movie]
     func searchMovies(query: String) async throws -> [Movie]
 }
 
+@MainActor
 final class MockMovieService: MovieServicing {
     // Base de datos ficticia centralizada con calificaciones (voteAverage) del 1 al 10
     private let mockMovies = [

@@ -1,12 +1,9 @@
 import SwiftUI
-import SwiftData
 
 struct ProfileView: View {
-    @EnvironmentObject var session: SessionStore
+    @ObservedObject var session: SessionStore
+    @ObservedObject var storage: StorageService
     @State private var showEdit = false
-    
-    // Consulta a la base de datos para contar los favoritos
-    @Query private var favorites: [Movie]
 
     var body: some View {
         ZStack {
@@ -14,7 +11,7 @@ struct ProfileView: View {
             VStack(spacing: 16) {
                 Image(systemName: "person.circle.fill").font(.system(size: 80))
                 Text(session.userName).font(.title.bold())
-                Text("Favoritas: \(favorites.count)")
+                Text("Favoritas: \(storage.favorites.count)")
                 
                 Button("Editar perfil") { showEdit = true }
                     .buttonStyle(.borderedProminent)
@@ -24,12 +21,12 @@ struct ProfileView: View {
             }
         }
         .navigationTitle("Perfil")
-        .sheet(isPresented: $showEdit) { EditProfileView() }
+        .sheet(isPresented: $showEdit) { EditProfileView(session: session) }
     }
 }
 
 struct EditProfileView: View {
-    @EnvironmentObject var session: SessionStore
+    @ObservedObject var session: SessionStore
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = EditProfileViewModel()
 

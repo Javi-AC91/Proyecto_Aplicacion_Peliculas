@@ -5,12 +5,14 @@ import Combine
 final class HomeViewModel: ObservableObject {
     @Published private(set) var state: ViewState<[Movie]> = .idle
     private let service: MovieServicing
-    
-    // Inyectamos el Mock por defecto
-    init(service: MovieServicing = MockMovieService()) {
-        self.service = service
+    // El servicio real se crea dentro del init (ya dentro del MainActor)
+    init(service: MovieServicing? = nil) {
+        if let service {
+            self.service = service
+        } else {
+            self.service = TMDBMovieService()
+        }
     }
-    
     func loadIfNeeded() async {
         guard case .idle = state else { return }
         await load()
@@ -20,9 +22,13 @@ final class HomeViewModel: ObservableObject {
         state = .loading
         do {
             let movies = try await service.popularMovies()
+            // Validamos estado 'Empty' (aunque populares raro vez está vacío, es buena práctica)
             state = .loaded(movies)
+        } catch let error as LocalizedError {
+            // Propagamos el mensaje de error de nuestro APIError
+            state = .error(error.errorDescription ?? "Ocurrió un error desconocido.")
         } catch {
-            state = .error("No se pudo cargar la cartelera.")
+            state = .error("Error inesperado: \(error.localizedDescription)")
         }
     }
 }

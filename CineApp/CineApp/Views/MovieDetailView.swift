@@ -1,15 +1,11 @@
 import SwiftUI
-import SwiftData
 
 struct MovieDetailView: View {
+    @ObservedObject var storage: StorageService
     @StateObject private var viewModel: MovieDetailViewModel
     
-    // Reemplazamos los Stores por consultas de SwiftData
-    @Environment(\.modelContext) private var context
-    @Query private var allFavorites: [Movie]
-    @Query private var allReviews: [Review]
-    
-    init(movie: Movie) {
+    init(movie: Movie, storage: StorageService) {
+        self.storage = storage
         _viewModel = StateObject(wrappedValue: MovieDetailViewModel(movie: movie))
     }
     
@@ -32,13 +28,13 @@ struct MovieDetailView: View {
                     HStack {
                         Text("Mi Reseña").font(.title3.bold())
                         Spacer()
-                        Button(viewModel.myReview(reviews: allReviews) == nil ? "Escribir" : "Editar") {
+                        Button(viewModel.myReview(in: storage) == nil ? "Escribir" : "Editar") {
                             viewModel.showReviewForm = true
                         }
                         .buttonStyle(.bordered)
                     }
                     
-                    if let review = viewModel.myReview(reviews: allReviews) {
+                    if let review = viewModel.myReview(in: storage) {
                         VStack(alignment: .leading, spacing: 8) {
                             HStack {
                                 Image(systemName: "star.fill").foregroundColor(.yellow)
@@ -59,13 +55,13 @@ struct MovieDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             Button {
-                viewModel.toggleFavorite(in: context, favorites: allFavorites)
+                viewModel.toggleFavorite(in: storage)
             } label: {
-                Image(systemName: viewModel.isFavorite(favorites: allFavorites) ? "heart.fill" : "heart")
+                Image(systemName: viewModel.isFavorite(in: storage) ? "heart.fill" : "heart")
             }
         }
         .sheet(isPresented: $viewModel.showReviewForm) {
-            ReviewFormView(movieId: viewModel.movie.id, existingReview: viewModel.myReview(reviews: allReviews))
+            ReviewFormView(movieId: viewModel.movie.id, existingReview: viewModel.myReview(in: storage), storage: storage)
         }
     }
 }
